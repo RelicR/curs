@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<WebApplication3.Models.Test>
+
+<h2>Просмотр таблиц</h2>
+
+<table>
+    <tr>
+        <td>
+            ID
+        </td>
+        <td>
+            Name
+        </td>
+        <td>
+            Desc
+        </td>
+    </tr>
+    @foreach (var item  in Model)
+    {
+        <tr>
+            <td>
+                @item.Id
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Description
+            </td>
+        </tr>
+    }
+</table>

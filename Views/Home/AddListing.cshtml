@@ -1,0 +1,15 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model WebApplication3.Models.Test
+
+<h2>Добавление записи</h2>
+<form asp-action="addlisting" asp-controller="home">
+    <p>
+        <input type="text" asp-for="Name" placeholder="Имя" /><br />
+        <input type="text" asp-for="Description" placeholder="Описание"/><br />
+        <input type="submit" value="Отправить"/><br />
+    </p>
+</form>

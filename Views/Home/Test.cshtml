@@ -1,0 +1,17 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model WebApplication3.Models.Indiv
+
+<p>@TempData["message"]</p>
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+    <br />
+    <input type="submit" value="Добавить"/>
+    <input type="reset" value="Сбросить"/>
+}

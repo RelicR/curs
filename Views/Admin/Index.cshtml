@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>Администратор</h1>
+@TempData["message"]
+<h2>Выберите базу для просмотра или редактирования</h2>
+<ul>
+    <li class="nav-item adm-li">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Individ">Физ. лица</a>
+    </li>
+    <li class="nav-item adm-li">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Legal">Юр. лица</a>
+    </li>
+    <li class="nav-item adm-li">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Client">Клиенты</a>
+    </li>
+    <li class="nav-item adm-li">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Employee">Архитекторы</a>
+    </li>
+    <li class="nav-item adm-li">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Subcon">Подрядчики</a>
+    </li>
+    <li class="nav-item adm-li">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Project">Проекты</a>
+    </li>
+    <li class="nav-item adm-li">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Edit">Правки к проектам</a>
+    </li>
+</ul>

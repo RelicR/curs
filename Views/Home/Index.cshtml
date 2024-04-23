@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Главная страница";
+}
+@model WebApplication3.Models.Person
+<h1>Главная страница</h1>
+
+<h2>@TempData["message"]</h2>
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+    <br />
+    @Html.LabelFor(m => m.RolesList)
+    <br />
+    @Html.DropDownList("role", new SelectList(Model.RolesList))
+    <br />
+    <br />
+    @Html.LabelFor(m => m.UID)
+    <br />
+    @Html.EditorFor(m => m.UID)
+    @Html.ValidationMessageFor(m => m.UID)
+    <br />
+    <br />
+    <input type="submit" name="logInp" value="Войти"/>
+}

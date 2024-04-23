@@ -1,0 +1,48 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model WebApplication3.Models.EmplModels
+<h1>@String.Format("EMP-{0:d3}", Model.User.Id)</h1>
+<h2>@TempData["message"]</h2>
+
+@Html.DisplayFor(m => m.Indiv)
+@Html.DisplayFor(m => m.Employee)
+<br />
+<h2>Проекты</h2>
+@if (Model.ProjsList != null)
+{
+    @foreach (var item in Model.ProjsList)
+    {
+        <details>
+            <summary>@item.Id - @item.Type</summary>
+            <h5>Адрес: </h5>@item.Address<br>
+            <h5>Дата начала: </h5>@String.Format("{0:d}", item.StartDate)<br>
+            <h5>Комментарий: </h5>@item.Description <br>
+            <h5>Бюджет: </h5>@item.Budget руб.<br>
+            <h5>Заказчик: </h5>@item.ClientUID<br>
+            <h5>Подрядчик: </h5>@item.SubcUID<br>
+            @if (item.IsEdit)
+            {
+                <details class="edetails">
+                    <summary>Правки</summary>
+                    @foreach (var edit in Model.EditsList)
+                    {
+                        if (edit.Id == item.Id)
+                        {
+                            @Html.Raw(edit.Total.Replace("||", "<br/>").Replace("|", "<br/>"))
+                            break;
+                        }
+                    }
+                </details>
+            }
+        </details>
+        <br />
+    }
+}
+@if (Model.ProjsList == null)
+{
+    <p style="font-weight: bolder;color: red;">Не найдено записей</p>
+}

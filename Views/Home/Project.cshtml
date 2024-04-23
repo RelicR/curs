@@ -1,0 +1,106 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model WebApplication3.Models.ViewModels
+<h1>Проекты</h1>
+<br />
+<h2>@TempData["message"]</h2>
+
+@using (Html.BeginForm("AdminForm", "Admin", FormMethod.Post))
+{
+    @Html.EditorFor(model => model.Target)
+    <br />
+    @if ((string?)TempData["action"] == "add")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.proj)
+        <br />
+        <input type="submit" name="finput" value="Добавить" />
+        <input type="reset" name="finput" value="Сброс" />
+    }
+    @if ((string?)TempData["action"] == "remove")
+    {
+        @Html.DisplayFor(model => model.proj)
+        <br />
+        <input type="submit" name="finput" value="Удалить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+    @if ((string?)TempData["action"] == "edit")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.proj)
+        <br />
+        <input type="submit" name="finput" value="Изменить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+}
+<br />
+<br />
+<h2>Просмотр таблиц</h2>
+@using (Html.BeginForm(Model.Target, "Admin", FormMethod.Post))
+{
+    <fieldset class="filterField">
+        Фильтры
+        <br>
+        Дата начала: 
+        с <input type="date" name="dFiltS">
+        по <input type="date" name="dFiltE">
+        <br>
+        Бюджет проекта: 
+        от <input type="number" name="bFiltS">
+        до <input type="number" name="bFiltE">
+        <br>
+        <input type="submit" name="finput" value="Применить" />
+    </fieldset>
+    @TempData["filtered"]
+}
+<table cellpadding="5">
+    <tr>
+        <th>ID проекта</th>
+        <th>Тип</th>
+        <th>Адрес</th>
+        <th>Дата</th>
+        <th>Комментарий</th>
+        <th>Бюджет</th>
+        <th>Правки</th>
+        <th>Заказчик</th>
+        <th>Архитектор</th>
+        <th>Подрядчик</th>
+        <th>Гос. заказ</th>
+    </tr>
+    @foreach (var item in Model.projsList)
+    {
+        <tr>
+            <td>@String.Format("{0:d3}", item.Id)</td>
+            <td>@item.Type</td>
+            <td>@item.Address</td>
+            <td>@item.StartDate.ToString("d")</td>
+            <td>@item.Description</td>
+            <td>@item.Budget</td>
+            <td>
+                @{
+                    var isEd = item.IsEdit ? "Есть" : "Нет";
+                }@isEd
+            </td>
+            <td>@item.ClientUID</td>
+            <td>@item.ArchUID</td>
+            <td>@item.SubcUID</td>
+            <td>@{
+                    var isGov = item.Gos ? "Да" : "Нет";
+                }@isGov
+            </td>
+            @using (Html.BeginForm("ItemAction", "Admin", FormMethod.Post))
+            {
+                <td><input type="submit" name="e-@Model.Target-@item.Id" value="Изменить" /></td>
+                <td><input type="submit" name="d-@Model.Target-@item.Id" value="Удалить" /></td>
+            }
+        </tr>
+    }
+</table>
+@if (Model.projsList.Count() == 0)
+{
+    <p style="font-weight: bolder;color: red;">Не найдено записей</p>
+}

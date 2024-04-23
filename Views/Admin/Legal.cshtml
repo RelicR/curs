@@ -1,0 +1,92 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model WebApplication3.Models.ViewModels
+<h1>Юридические лица</h1>
+<br />
+<h2>@TempData["message"]</h2>
+
+@using (Html.BeginForm("AdminForm", "Admin", FormMethod.Post))
+{
+    @Html.EditorFor(model => model.Target)
+    <br />
+    @if ((string?)TempData["action"] == "add")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.legal)
+        <br />
+        <input type="submit" name="finput" value="Добавить" />
+        <input type="reset" name="finput" value="Сброс" />
+    }
+    @if ((string?)TempData["action"] == "remove")
+    {
+        @Html.HiddenFor(model => model.legal.Id)
+        @Html.DisplayFor(model => model.legal)
+        <br />
+        <input type="submit" name="finput" value="Удалить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+    @if ((string?)TempData["action"] == "edit")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.legal)
+        <br />
+        <input type="submit" name="finput" value="Изменить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+}
+<br />
+<br />
+<h2>Просмотр таблиц</h2>
+@using (Html.BeginForm(Model.Target, "Admin"))
+{
+    <fieldset class="filterField">
+        Фильтр:
+        <select name="filter">
+            <option value="null">Показать всех</option>
+            <option value="true">Коммерческие</option>
+            <option value="false">Некоммерческие</option>
+        </select>
+        <input type="submit" name="finput" value="Применить" />
+    </fieldset>
+    @TempData["filtered"]
+}
+<table cellpadding="5">
+    <tr>
+        <th>UID</th>
+        <th>Некоммерческое</th>
+        <th>Наименование</th>
+        <th>Контактное лицо</th>
+        <th>Телефон</th>
+        <th>ИНН</th>
+        <th>ОГРН</th>
+    </tr>
+    @foreach (var item in Model.legalsList)
+    {
+        <tr>
+            <td>@String.Format("LEG-{0:d3}", item.Id)</td>
+            <td>
+                @{
+                    var isNonc = item.Type ? "Да" : "Нет";
+                }@isNonc
+            </td>
+            <td>@item.Name</td>
+            <td>@item.ConPers</td>
+            <td>@item.Phone</td>
+            <td>@item.INN</td>
+            <td>@item.OGRN</td>
+            @using (Html.BeginForm("ItemAction", "Admin", FormMethod.Post))
+            {
+                <td><input type="submit" name="e-@Model.Target-@item.Id" value="Изменить" /></td>
+                <td><input type="submit" name="d-@Model.Target-@item.Id" value="Удалить" /></td>
+            }
+        </tr>
+    }
+</table>
+@if (Model.legalsList.Count() == 0)
+{
+    <p style="font-weight: bolder;color: red;">Не найдено записей</p>
+}

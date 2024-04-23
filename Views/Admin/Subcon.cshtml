@@ -1,0 +1,84 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model WebApplication3.Models.ViewModels
+<h1>Подрядчики</h1>
+<br />
+<h2>@TempData["message"]</h2>
+
+@using (Html.BeginForm("AdminForm", "Admin", FormMethod.Post))
+{
+    @Html.EditorFor(model => model.Target)
+    <br />
+    @if ((string?)TempData["action"] == "add")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.subc)
+        <br />
+        <input type="submit" name="finput" value="Добавить" />
+        <input type="reset" name="finput" value="Сброс" />
+    }
+    @if ((string?)TempData["action"] == "remove")
+    {
+        @Html.HiddenFor(model => model.subc.Id)
+        @Html.DisplayFor(model => model.subc)
+        <br />
+        <input type="submit" name="finput" value="Удалить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+    @if ((string?)TempData["action"] == "edit")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.subc)
+        <br />
+        <input type="submit" name="finput" value="Изменить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+}
+<br />
+<br />
+<h2>Просмотр таблиц</h2>
+@* @using (Html.BeginForm("Test1", "Home"))
+{
+    <fieldset class="filterField">
+        Фильтр ИП:
+        <select name="ipFilter">
+            <option value="null">Показать всех</option>
+            <option value="true">ИП</option>
+            <option value="false">Не ИП</option>
+        </select>
+        <input type="submit" name="finput" value="Фильтр" />
+    </fieldset>
+    @TempData["filtered"]
+} *@
+<table cellpadding="5">
+    <tr>
+        <th>ID подрядчика</th>
+        <th>UID</th>
+        <th>Сфера деятельности</th>
+        <th>Район</th>
+        <th>Договор #</th>
+    </tr>
+    @foreach (var item in Model.subcsList)
+    {
+        <tr>
+            <td>@String.Format("SUB-{0:d3}", item.Id)</td>
+            <td>@item.UID</td>
+            <td>@item.Area</td>
+            <td>@item.Zone</td>
+            <td>@item.Contract</td>
+            @using (Html.BeginForm("ItemAction", "Admin", FormMethod.Post))
+            {
+                <td><input type="submit" name="e-@Model.Target-@item.Id" value="Изменить" /></td>
+                <td><input type="submit" name="d-@Model.Target-@item.Id" value="Удалить" /></td>
+            }
+        </tr>
+    }
+</table>
+@if (Model.subcsList.Count() == 0)
+{
+    <p style="font-weight: bolder;color: red;">Не найдено записей</p>
+}

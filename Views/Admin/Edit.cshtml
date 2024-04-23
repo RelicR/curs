@@ -1,0 +1,68 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model WebApplication3.Models.ViewModels
+<h1>Правки</h1>
+<br />
+<h2>@TempData["message"]</h2>
+
+@using (Html.BeginForm("AdminForm", "Admin", FormMethod.Post))
+{
+    @Html.EditorFor(model => model.Target)
+    @if ((string?)TempData["action"] == "add")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.edit)
+        <br />
+        <input type="submit" name="finput" value="Добавить" />
+        <input type="reset" name="finput" value="Сброс" />
+    }
+    @if ((string?)TempData["action"] == "remove")
+    {
+        @Html.HiddenFor(model => model.edit.Id)
+        @Html.DisplayFor(model => model.edit)
+        <br />
+        <input type="submit" name="finput" value="Удалить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+    @if ((string?)TempData["action"] == "edit")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.edit)
+        <br />
+        <input type="submit" name="finput" value="Изменить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+}
+<br />
+<br />
+<h2>Просмотр таблиц</h2>
+<table cellpadding="5">
+    <tr>
+        <th>Проект</th>
+        <th>Правки проекта</th>
+    </tr>
+    @foreach (var item in Model.editsList)
+    {
+        <tr>
+            <td>@String.Format("{0:d3}", item.Id)</td>
+            <td>@{
+                    var isTotal = String.IsNullOrEmpty(item.Total) ? "Нет" : item.Total;
+                }
+                <details class="edetails">@Html.Raw(isTotal.Replace("||", "<br/>").Replace("|", "<br/>"))</details>
+            </td>
+            @using (Html.BeginForm("ItemAction", "Admin", FormMethod.Post))
+            {
+                <td><input type="submit" name="e-@Model.Target-@item.Id" value="Изменить" /></td>
+                <td><input type="submit" name="d-@Model.Target-@item.Id" value="Удалить" /></td>
+            }
+        </tr>
+    }
+</table>
+@if (Model.editsList.Count() == 0)
+{
+    <p style="font-weight: bolder;color: red;">Не найдено записей</p>
+}

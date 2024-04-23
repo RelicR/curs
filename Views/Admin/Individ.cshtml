@@ -1,0 +1,98 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model WebApplication3.Models.ViewModels
+<h1>Физические лица</h1>
+<br />
+<h2>@TempData["message"]</h2>
+
+@using (Html.BeginForm("AdminForm", "Admin", FormMethod.Post))
+{
+    @Html.EditorFor(model => model.Target)
+    <br />
+    @if ((string?)TempData["action"] == "add")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.indiv)
+        <br />
+        <input type="submit" name="finput" value="Добавить" />
+        <input type="reset" name="finput" value="Сброс" />
+    }
+    @if ((string?)TempData["action"] == "remove")
+    {
+        @Html.HiddenFor(model => model.indiv.Id)
+        @Html.DisplayFor(model => model.indiv)
+        <br />
+        <input type="submit" name="finput" value="Удалить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+    @if ((string?)TempData["action"] == "edit")
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorFor(model => model.indiv)
+        <br />
+        <input type="submit" name="finput" value="Изменить" />
+        @Html.ActionLink("Отмена", Model.Target)
+    }
+}
+<br />
+<br />
+<h2>Просмотр таблиц</h2>
+@using (Html.BeginForm(Model.Target, "Admin"))
+{
+    <fieldset class="filterField">
+        Поиск:
+        <input type="text" name="surfilter" placeholder="Фамилия">
+        <input type="text" name="namefilter" placeholder="Имя">
+        <input type="text" name="midfilter" placeholder="Отчество">
+        <input type="submit" name="finput" value="Применить" />
+    </fieldset>
+}
+@using (Html.BeginForm(Model.Target, "Admin"))
+{
+    <fieldset class="filterField">
+        Фильтр:
+        <select name="filter">
+            <option value="null">Показать всех</option>
+            <option value="true">ИП</option>
+            <option value="false">Не ИП</option>
+        </select>
+        <input type="submit" name="finput" value="Применить" />
+    </fieldset>
+    @TempData["filtered"]
+}
+<table cellpadding="5">
+    <tr>
+        <th>UID</th>
+        <th>ИП</th>
+        <th>ФИО</th>
+        <th>Телефон</th>
+        <th>ИНН</th>
+    </tr>
+    @foreach (var item in Model.indivsList)
+    {
+        <tr>
+            <td>@String.Format("IND-{0:d3}", item.Id)</td>
+            <td>
+                @{
+                    var isIP = item.Type ? "Да" : "Нет";
+                }@isIP
+            </td>
+            <td>@item.Surname @item.Name @item.Midname</td>
+            <td>@item.Phone</td>
+            <td>@item.INN</td>
+            @using (Html.BeginForm("ItemAction", "Admin", FormMethod.Post))
+            {
+                <td><input type="submit" name="e-@Model.Target-@item.Id" value="Изменить" /></td>
+                <td><input type="submit" name="d-@Model.Target-@item.Id" value="Удалить" /></td>
+            }
+        </tr>
+    }
+</table>
+@if (Model.indivsList.Count() == 0)
+{
+    <p style="font-weight: bolder;color: red;">Не найдено записей</p>
+}
